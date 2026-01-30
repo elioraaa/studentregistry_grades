@@ -1,0 +1,5 @@
+CS101, Introduction to Programming I (Java), 4
+CS102, Introduction to Programming II (Data Structures), 4
+CS201, Object Oriented Programming with Java, 3
+ECON505, Advanced Economic Theory, 3
+LAW610, International Business Law, 4

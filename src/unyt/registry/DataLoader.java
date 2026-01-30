@@ -1,29 +1,27 @@
 package unyt.registry;
 
 import java.io.BufferedReader;
-import java.io.IOExeption;
-import java.nio.charset.StandartCharsets;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DataLoader {
 
-    public record LoadResult(List<Student> students, List<Course> courses, List<Evaluation> grades, Path folder) {}
-
-    public static LoadResult loadAll(String folderpath) {
+    public static LoadResult loadAll(String folderPath) {
         Path folder = Path.of(folderPath);
 
         if (!Files.exists(folder) || !Files.isDirectory(folder)) {
-            throw new IllegalArgumentException ("invalid folder name");
+            throw new IllegalArgumentException("invalid folder name");
         }
 
         Path studentsFile = folder.resolve("students.txt");
         Path coursesFile = folder.resolve("courses.txt");
         Path gradesFile = folder.resolve("grades.txt");
 
-        if (!Files.exists(studentsFile) || !Files.exists(coursesFile) || !Files.exists(gradesFileFile)) {
-            throw new IllegalArgumentException ("data files not found");
+        if (!Files.exists(studentsFile) || !Files.exists(coursesFile) || !Files.exists(gradesFile)) {
+            throw new IllegalArgumentException("data files not found");
         }
 
         List<Student> students = loadStudents(studentsFile);
@@ -34,10 +32,10 @@ public class DataLoader {
     }
 
     private static List<Student> loadStudents(Path file) {
-        List<Student> list = new Arraylist<>();
+        List<Student> list = new ArrayList<>();
         int lineNo = 0;
 
-        try (BufferedReader br = Files.newBufferedReader(file, StandartCharsets.UTF_8)) {
+        try (BufferedReader br = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
             String line;
             while ((line = br.readLine()) != null) {
                 lineNo++;
@@ -45,12 +43,12 @@ public class DataLoader {
                 if (line.isEmpty()) continue;
 
                 String[] p = line.split(", ", -1);
-                if (p.length != 5) throw new IllegalArgumentException("student.txt invalid line" + lineNo);
+                if (p.length != 5) throw new IllegalArgumentException("students.txt invalid line " + lineNo);
 
                 String id = p[0].trim();
                 String name = p[1].trim();
                 String surname = p[2].trim();
-                String email = p[3];
+                String email = p[3]; // can be empty
                 String levelStr = p[4].trim();
 
                 Validation.validateStudentId(id);
@@ -59,7 +57,7 @@ public class DataLoader {
                 Validation.validateEmailOptional(email);
                 Level level = Validation.parseLevel(levelStr);
 
-                list.add(new Student(id, name, surname, email.trm(), level));
+                list.add(new Student(id, name, surname, email.trim(), level));
             }
         } catch (IOException e) {
             throw new IllegalArgumentException("cannot read students.txt");
@@ -68,10 +66,10 @@ public class DataLoader {
     }
 
     private static List<Course> loadCourses(Path file) {
-        List<Course> = new Arraylist<>();
+        List<Course> list = new ArrayList<>();
         int lineNo = 0;
 
-        try (BufferedReader br = Files.newBufferedReader(file, StandartCharsets.UTF_8)) {
+        try (BufferedReader br = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
             String line;
             while ((line = br.readLine()) != null) {
                 lineNo++;
@@ -79,7 +77,7 @@ public class DataLoader {
                 if (line.isEmpty()) continue;
 
                 String[] p = line.split(", ", -1);
-                if (p.length != 3) throw new IllegalArgumentException("courses.txt invalid line" + lineNo);
+                if (p.length != 3) throw new IllegalArgumentException("courses.txt invalid line " + lineNo);
 
                 String code = p[0].trim();
                 String title = p[1].trim();
@@ -99,10 +97,10 @@ public class DataLoader {
     }
 
     private static List<Evaluation> loadGrades(Path file) {
-        List<Evaluation> =new Arraylist<>();
+        List<Evaluation> list = new ArrayList<>();
         int lineNo = 0;
 
-        try (BufferedReader br = Files.newBufferedReader(file, StandartCharsets.UTF_8)) {
+        try (BufferedReader br = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
             String line;
             while ((line = br.readLine()) != null) {
                 lineNo++;
@@ -110,7 +108,7 @@ public class DataLoader {
                 if (line.isEmpty()) continue;
 
                 String[] p = line.split(", ", -1);
-                if (p.length != 4) throw new IllegalArgumentException("grades.txt invalid line" + lineNo);
+                if (p.length != 4) throw new IllegalArgumentException("grades.txt invalid line " + lineNo);
 
                 String studentId = p[0].trim();
                 String courseCode = p[1].trim();
@@ -127,5 +125,8 @@ public class DataLoader {
             throw new IllegalArgumentException("cannot read grades.txt");
         }
         return list;
+    }
+
+    public record LoadResult(List<Student> students, List<Course> courses, List<Evaluation> grades, Path folder) {
     }
 }

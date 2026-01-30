@@ -1,8 +1,13 @@
 package unyt.registry;
 
 public class GradingService {
+
+    public static double round2(double x) {
+        return Math.round(x * 100.0) / 100.0;
+    }
+
     public LetterGrade letterFor(Level level, int numeric) {
-        if (numeric <0 || numeric 100) throw new IllegalArgumentExeption("invalid grade");
+        if (numeric < 0 || numeric > 100) throw new IllegalArgumentException("invalid grade");
 
         if (level == Level.UG) {
             if (numeric >= 95) return LetterGrade.A;
@@ -24,9 +29,5 @@ public class GradingService {
             if (numeric >= 75) return LetterGrade.C;
             return LetterGrade.F;
         }
-    }
-
-    public static double round2(double x){
-        return Math.round(x* 100.0) / 100.0;
     }
 }
